@@ -1,5 +1,5 @@
 import { RegisterForm } from '@/components/auth/register-form'
-import ContentLoader from '@/components/ui/ContentLoader'
+import Loader from '@/components/ui/Loader'
 import React from 'react'
 
 const Page = () => {

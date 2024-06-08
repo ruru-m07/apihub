@@ -1,6 +1,6 @@
 import React from "react";
 
-const ContentLoader = ({
+const Loader = ({
   size,
   dark = false,
 }: {
@@ -14,4 +14,4 @@ const ContentLoader = ({
   );
 };
 
-export default ContentLoader;
+export default Loader;

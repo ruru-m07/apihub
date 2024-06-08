@@ -19,7 +19,7 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
-import ContentLoader from "../ui/ContentLoader";
+import Loader from "../ui/Loader";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { useSearchParams } from "next/navigation";
@@ -114,7 +114,7 @@ const LoginForm = () => {
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full gap-2">
-            {isPending && <ContentLoader size={4} dark />}
+            {isPending && <Loader size={4} dark />}
             {showTwoFactor ? "Confirm" : "Login"}
           </Button>
         </form>

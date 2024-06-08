@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { loginUser, logoutUser, registerUser } from "../api";
 import { UserInterface } from "../interfaces/user";
 import { LocalStorage, requestHandler } from "../utils";
-import ContentLoader from "@/components/ui/ContentLoader";
+import Loader from "@/components/ui/Loader";
 import { useRouter } from "next/navigation";
 
 // Create a context to manage authentication-related data and functions
@@ -104,7 +104,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     <AuthContext.Provider value={{ user, login, register, logout, token }}>
       {isLoading ? (
         <div className="h-screen w-full flex items-center justify-center">
-          <ContentLoader size={8} />
+          <Loader size={8} />
         </div>
       ) : (
         children
