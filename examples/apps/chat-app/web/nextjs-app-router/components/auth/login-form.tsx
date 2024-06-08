@@ -27,12 +27,6 @@ import { useAuth } from "@/context/AuthContext";
 
 const LoginForm = () => {
   const [isPending, setIsPending] = useState(false);
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -111,7 +105,7 @@ const LoginForm = () => {
               </Button> */}
             </>
           </div>
-          <FormError message={error || urlError} />
+          <FormError message={error} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full gap-2">
             {isPending && <Loader size={4} dark />}
