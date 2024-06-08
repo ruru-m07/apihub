@@ -21,6 +21,7 @@ import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
 import ContentLoader from "@/components/ui/ContentLoader";
 import { PasswordInput } from "./PasswordInput";
+import { useAuth } from "@/context/AuthContext";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -36,8 +37,14 @@ export const RegisterForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
-     console.log(values);
+  const { register } = useAuth();
+
+  const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
+    await register({
+      email: values.email,
+      password: values.password,
+      username: values.username,
+    });
   };
 
   return (

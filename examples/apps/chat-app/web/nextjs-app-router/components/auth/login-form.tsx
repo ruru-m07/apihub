@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { LoginSchema } from "@/schemas";
 import React, { useState } from "react";
@@ -23,6 +23,7 @@ import ContentLoader from "../ui/ContentLoader";
 import { FormError } from "./form-error";
 import { FormSuccess } from "./form-success";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginForm = () => {
   const [isPending, setIsPending] = useState(false);
@@ -37,17 +38,22 @@ const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
-
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const { login } = useAuth();
+
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     console.log(values);
+    await login({
+      username: values.username,
+      password: values.password,
+    });
   };
 
   return (
@@ -62,16 +68,16 @@ const LoginForm = () => {
             <>
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="john.doe@example.com"
-                        type="email"
+                        placeholder="username"
+                        type="text"
                       />
                     </FormControl>
                     <FormMessage />
