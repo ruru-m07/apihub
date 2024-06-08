@@ -3,9 +3,8 @@ import axios from "axios";
 import { LocalStorage } from "../utils";
 
 // Create an Axios instance for API requests
-console.log("process.env.SERVER_URI", process.env.NEXT_SERVER_URI)
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_SERVER_URI || "http://localhost:8080/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URI,
   withCredentials: true,
   timeout: 120000,
 });
