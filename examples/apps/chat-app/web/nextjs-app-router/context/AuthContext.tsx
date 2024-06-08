@@ -102,7 +102,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Provide authentication-related data and functions through the context
   return (
     <AuthContext.Provider value={{ user, login, register, logout, token }}>
-      {isLoading ? <>loading...</> : children}{" "}
+      {isLoading ? (
+        <div className="h-screen w-full flex items-center justify-center">
+          <ContentLoader size={8} />
+        </div>
+      ) : (
+        children
+      )}{" "}
       {/* Display a loader while loading */}
     </AuthContext.Provider>
   );
