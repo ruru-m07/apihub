@@ -5,7 +5,8 @@ import { loginUser, logoutUser, registerUser } from "../api";
 import { UserInterface } from "../interfaces/user";
 import { LocalStorage, requestHandler } from "../utils";
 import Loader from "@/components/ui/Loader";
-import { useRouter } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
+import { redirect } from "next/navigation";
 
 // Create a context to manage authentication-related data and functions
 const AuthContext = createContext<{
@@ -37,21 +38,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<UserInterface | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const router = useRouter();
   // Function to handle user login
   const login = async (data: { username: string; password: string }) => {
     await requestHandler(
       async () => await loginUser(data),
-      setIsLoading,
+      null,
       (res) => {
         const { data } = res;
         setUser(data.user);
         setToken(data.accessToken);
         LocalStorage.set("user", data.user);
         LocalStorage.set("token", data.accessToken);
-        router.push("/"); // Redirect to the chat page after successful login
-      },
-      alert // Display error alerts on request failure
+        redirect("/"); // Redirect to the chat page after successful login
+      }
     );
   };
 
@@ -63,12 +62,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }) => {
     await requestHandler(
       async () => await registerUser(data),
-      setIsLoading,
+      null,
       () => {
-        alert("Account created successfully! Go ahead and login.");
-        router.push("/login"); // Redirect to the login page after successful registration
-      },
-      alert // Display error alerts on request failure
+        toast({
+          variant: "success",
+          title: "Account created successfully! 🎉 ",
+        });
+        redirect("/login"); // Redirect to the login page after successful registration
+      }
     );
   };
 
@@ -81,9 +82,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         setUser(null);
         setToken(null);
         LocalStorage.clear(); // Clear local storage on logout
-        router.push("/login"); // Redirect to the login page after successful logout
-      },
-      alert // Display error alerts on request failure
+        redirect("/login"); // Redirect to the login page after successful logout
+      }
     );
   };
 
@@ -108,8 +108,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         </div>
       ) : (
         children
-      )}{" "}
-      {/* Display a loader while loading */}
+      )}
     </AuthContext.Provider>
   );
 };

@@ -17,20 +17,12 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
 import Loader from "../ui/Loader";
-import { FormError } from "./form-error";
-import { FormSuccess } from "./form-success";
-import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
 const LoginForm = () => {
   const [isPending, setIsPending] = useState(false);
-
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -43,11 +35,12 @@ const LoginForm = () => {
   const { login } = useAuth();
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    setIsPending(true)
     console.log(values);
     await login({
       username: values.username,
       password: values.password,
-    });
+    }).finally(() => setIsPending(false));
   };
 
   return (
@@ -70,7 +63,7 @@ const LoginForm = () => {
                       <Input
                         {...field}
                         disabled={isPending}
-                        placeholder="username"
+                        placeholder="user_007"
                         type="text"
                       />
                     </FormControl>
@@ -105,11 +98,9 @@ const LoginForm = () => {
               </Button> */}
             </>
           </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full gap-2">
             {isPending && <Loader size={4} dark />}
-            {showTwoFactor ? "Confirm" : "Login"}
+            {"Login"}
           </Button>
         </form>
       </Form>

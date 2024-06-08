@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,16 +17,12 @@ import {
 } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/auth/form-error";
-import { FormSuccess } from "@/components/auth/form-success";
 import Loader from "@/components/ui/Loader";
 import { PasswordInput } from "./PasswordInput";
 import { useAuth } from "@/context/AuthContext";
 
 export const RegisterForm = () => {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState<boolean>();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -40,11 +36,12 @@ export const RegisterForm = () => {
   const { register } = useAuth();
 
   const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
+    setIsPending(true);
     await register({
       email: values.email,
       password: values.password,
       username: values.username,
-    });
+    }).finally(() => setIsPending(false));
   };
 
   return (
@@ -100,7 +97,7 @@ export const RegisterForm = () => {
                   <FormControl>
                     <PasswordInput
                       {...field}
-                      placeholder="******"
+                      placeholder="••••••••"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -109,8 +106,6 @@ export const RegisterForm = () => {
               )}
             />
           </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full gap-2">
             {isPending && <Loader size={4} dark />}
             Create an account

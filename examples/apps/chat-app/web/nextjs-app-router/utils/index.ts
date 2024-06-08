@@ -3,20 +3,20 @@ import { AxiosResponse } from "axios";
 import { FreeAPISuccessResponseInterface } from "../interfaces/api";
 import { ChatListItemInterface } from "../interfaces/chat";
 import { UserInterface } from "../interfaces/user";
+import { toast } from "@/components/ui/use-toast";
 
 // A utility function for handling API requests with loading, success, and error handling
 export const requestHandler = async (
   api: () => Promise<AxiosResponse<FreeAPISuccessResponseInterface, any>>,
   setLoading: ((loading: boolean) => void) | null,
-  onSuccess: (data: FreeAPISuccessResponseInterface) => void,
-  onError: (error: string) => void
+  onSuccess: (data: FreeAPISuccessResponseInterface) => void
 ) => {
   // Show loading state if setLoading function is provided
   setLoading && setLoading(true);
   try {
     // Make the API request
     const response = await api();
-    console.log("response", response)
+    console.log("response", response);
 
     const { data } = response;
     if (data?.success) {
@@ -25,12 +25,17 @@ export const requestHandler = async (
     }
   } catch (error: any) {
     // Handle error cases, including unauthorized and forbidden cases
-    console.log(error)
+    console.log(error);
     if ([401, 403].includes(error?.response?.data?.statusCode)) {
       localStorage.clear(); // Clear local storage on authentication issues
       if (isBrowser) window.location.href = "/login"; // Redirect to login page
     }
-    onError(error?.response?.data?.message || "Something went wrong");
+
+    error?.response?.data?.message &&
+      toast({
+        variant: "destructive",
+        title: error?.response?.data?.message || "Something went wrong",
+      });
   } finally {
     // Hide loading state if setLoading function is provided
     setLoading && setLoading(false);
