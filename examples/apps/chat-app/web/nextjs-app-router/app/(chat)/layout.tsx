@@ -3,20 +3,16 @@
 import { useAuth } from "@/context/AuthContext";
 import { redirect } from "next/navigation";
 
-const AuthLayout = ({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   const { user } = useAuth();
 
-  if (user) {
-    redirect("/");
+  if (!user) {
+    redirect("/login");
   }
 
-  return (
-    <div className="h-screen flex justify-center items-center">{children}</div>
-  );
-};
-
-export default AuthLayout;
+  return <div>{children}</div>;
+}
